@@ -1,4 +1,4 @@
-module github.com/preceeder/gracefulRestart
+module github.com/preceeder/graceful
 
 go 1.22.3
 

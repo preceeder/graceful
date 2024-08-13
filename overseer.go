@@ -5,7 +5,7 @@ package overseer
 import (
 	"errors"
 	"fmt"
-	"github.com/preceeder/gracefulRestart/fetcher"
+	"github.com/preceeder/graceful/fetcher"
 	"log/slog"
 	"os"
 	"runtime"
