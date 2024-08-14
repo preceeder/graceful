@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -79,6 +80,7 @@ func (mp *master) checkBinary() error {
 		//copy permissions
 		mp.binPerms = info.Mode()
 	}
+	slog.Info("", "binPath", mp.binPath)
 	f, err := os.Open(binPath)
 	if err != nil {
 		return fmt.Errorf("cannot read binary (%s)", err)
@@ -90,6 +92,7 @@ func (mp *master) checkBinary() error {
 	f.Close()
 	//test bin<->tmpbin moves
 	if mp.Config.Fetcher != nil {
+		slog.Info("", "mp.Config.Fetcher", mp.Config.Fetcher)
 		if err := move(tmpBinPath, mp.binPath); err != nil {
 			return fmt.Errorf("cannot move binary (%s)", err)
 		}
@@ -289,8 +292,14 @@ func (mp *master) fetch() {
 		return
 	}
 	if tokenIn != string(tokenOut) {
-		mp.warnf("sanity check failed")
-		return
+		tokenOutStr := string(tokenOut)
+		tokenOutStrs := strings.Split(tokenOutStr, "\n")
+		fmt.Println("tokenOutStr", tokenOutStr, "tokenIn", tokenIn)
+		tokenOutNew := tokenOutStrs[len(tokenOutStrs)-1]
+		if tokenIn != tokenOutNew {
+			mp.warnf("sanity check failed", "tokenIn", tokenIn, "tokenOut", string(tokenOut))
+			return
+		}
 	}
 	//overwrite!
 	if err := overwrite(mp.binPath, tmpBinPath); err != nil {
@@ -412,13 +421,13 @@ func (mp *master) fork() error {
 
 func (mp *master) debugf(f string, args ...interface{}) {
 	if mp.Config.Debug {
-		slog.Debug("[overseer master] ", "f", f, "args", args)
+		slog.Info("[overseer master] ", "f", f, "args", args)
 	}
 }
 
 func (mp *master) warnf(f string, args ...interface{}) {
 	if mp.Config.Debug || !mp.Config.NoWarn {
-		slog.Warn("[overseer master] ", "f", f, "args", args)
+		slog.Info("[overseer master] ", "f", f, "args", args)
 	}
 }
 
