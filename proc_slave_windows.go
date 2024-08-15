@@ -1,6 +1,7 @@
+//go:build windows
 // +build windows
 
-package overseer
+package graceful
 
 import (
 	"context"
@@ -8,8 +9,6 @@ import (
 	"os"
 	"strings"
 	"time"
-
-	"github.com/StackExchange/wmi"
 )
 
 var (

@@ -1,6 +1,6 @@
 // Package overseer implements daemonizable
 // self-upgrading binaries in Go (golang).
-package overseer
+package graceful
 
 import (
 	"errors"
@@ -46,9 +46,9 @@ type Config struct {
 	//PreUpgrade runs after a binary has been retrieved, user defined checks
 	//can be run here and returning an error will cancel the upgrade.
 	PreUpgrade func(tempBinaryPath string) error
-	//Debug enables all [overseer] logs.
+	//Debug enables all [graceful] logs.
 	Debug bool
-	//NoWarn disables warning [overseer] logs.
+	//NoWarn disables warning [graceful] logs.
 	NoWarn bool
 	//NoRestart disables all restarts, this option essentially converts
 	//the RestartSignal into a "ShutdownSignal".
@@ -127,7 +127,7 @@ func sanityCheck() bool {
 // is compatible with overseer. This tries to ensure that a restart
 // is never performed against a bad binary, as it would require
 // manual intervention to rectify. This is automatically done
-// on overseer.Run() though it can be manually run prior whenever
+// on graceful.Run() though it can be manually run prior whenever
 // necessary.
 func SanityCheck() {
 	if sanityCheck() {
