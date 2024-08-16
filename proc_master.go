@@ -21,6 +21,22 @@ import (
 	"time"
 )
 
+func init() {
+	wd, err := os.Getwd()
+	if err != nil {
+		slog.Error("", "failed to find getwd()", err.Error())
+		os.Exit(1)
+	}
+	tmp := filepath.Join(wd, "tmp")
+	err = os.MkdirAll(tmp, os.ModePerm)
+	if err != nil {
+		slog.Error("", "create dir tmp failed", err.Error())
+		os.Exit(1)
+	}
+
+	tmpBinPath = filepath.Join(tmp, "overseer-"+token()+extension())
+}
+
 var tmpBinPath = filepath.Join(os.TempDir(), "overseer-"+token()+extension())
 
 // a overseer master process
@@ -92,7 +108,7 @@ func (mp *master) checkBinary() error {
 	f.Close()
 	//test bin<->tmpbin moves
 	if mp.Config.Fetcher != nil {
-		slog.Info("", "mp.Config.Fetcher", mp.Config.Fetcher)
+		slog.Info("", "mp.Config.Fetcher", mp.Config.Fetcher, "tmpBinPath", tmpBinPath, "binPath", mp.binPath)
 		if err := move(tmpBinPath, mp.binPath); err != nil {
 			return fmt.Errorf("cannot move binary (%s)", err)
 		}

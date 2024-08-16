@@ -98,9 +98,9 @@ func Run(c Config) {
 	err := runErr(&c)
 	if err != nil {
 		if c.Required {
-			slog.Error("[overseer]", "error", err.Error())
+			slog.Error("[graceful] disabled", "error", err.Error())
 		} else if c.Debug || !c.NoWarn {
-			slog.Error("[overseer] disabled. run failed", "error", err.Error())
+			slog.Error("[graceful] disabled. run failed", "error", err.Error())
 		}
 		c.Program(DisabledState)
 		return
