@@ -6,6 +6,7 @@ package graceful
 import (
 	"context"
 	"fmt"
+	"github.com/StackExchange/wmi"
 	"os"
 	"strings"
 	"time"

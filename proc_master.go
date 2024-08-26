@@ -28,7 +28,7 @@ func init() {
 		os.Exit(1)
 	}
 	tmp := filepath.Join(wd, "tmp")
-	err = os.MkdirAll(tmp, os.ModePerm)
+	err = os.MkdirAll(tmp, 0777)
 	if err != nil {
 		slog.Error("", "create dir tmp failed", err.Error())
 		os.Exit(1)
